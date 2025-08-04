@@ -8,7 +8,7 @@ import {
   ClipboardList,
   FileBarChart,
   Settings,
-} from "lucide-react"; // استفاده از آیکون‌های lucide
+} from "lucide-react"; 
 
 const navItems = [
   { title: "داشبورد", to: "/", icon: <BarChart2 size={20} /> },

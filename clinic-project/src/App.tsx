@@ -10,11 +10,13 @@ import Schedules from "./pages/Schedules";
 import Signup from "./pages/Sign-up";
 import Reports from "./pages/Reports";
 import Settings from "./pages/Settings";
+import  Login  from "./pages/Login";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<Login />} />
         <Route path="/sign-up" element={<Signup />} />
         <Route path="/" element={<Layout />}>
           <Route index element={<Dashboard />} />

@@ -1,7 +1,10 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Header = () => {
+  const navigate = useNavigate();
+  const [userFullName, setUserFullName] = useState("");
+  const [logged, setLogged] = useState(false);
   const navItems = [
     { title: "داشبورد", path: "/" },
     { title: "بیماران", path: "/patients" },
@@ -10,16 +13,37 @@ export const Header = () => {
     { title: "تخصص‌ها", path: "/specialties" },
     { title: "برنامه‌ها", path: "/schedules" },
   ];
+  const userId = localStorage.getItem("userId");
+  const fullName = localStorage.getItem("FullName");
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+    const fullName = localStorage.getItem("FullName");
+
+    if (fullName && userId) {
+      setLogged(true);
+      setUserFullName(fullName);
+    } else {
+      setLogged(false);
+      setUserFullName("");
+    }
+  }, []);
+
+  const handleLogout = () => {
+    localStorage.removeItem("userId");
+    localStorage.removeItem("FullName");
+    setLogged(false);
+    setUserFullName("");
+    navigate("/");
+  };
 
   return (
     <header className="bg-blue-600 text-white py-4 px-6" dir="rtl">
       <div className="container mx-auto flex items-center justify-between">
-        {/* عنوان */}
         <h1 className="text-xl font-bold whitespace-nowrap">
           سیستم مدیریت کلینیک
         </h1>
 
-        {/* منو */}
         <nav>
           <ul className="flex gap-6 text-sm font-medium">
             {navItems.map((item, index) => (
@@ -31,14 +55,31 @@ export const Header = () => {
             ))}
           </ul>
         </nav>
-
-        {/* دکمه ورود */}
-        <Link
-          to="/sign-up"
-          className="bg-white text-black px-4 py-2 rounded-xl shadow hover:bg-gray-100 transition"
-        >
-          ورود
-        </Link>
+        <div className="flex gap-2">
+          {logged ? (
+            <>
+              <span className="text-white font-bold">{userFullName}</span>
+              <span onClick={handleLogout} className="cursor-pointer">
+                Logout
+              </span>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/sign-up"
+                className="bg-white text-black px-4 py-2 rounded-xl shadow hover:bg-gray-100 transition"
+              >
+                ثبت نام
+              </Link>
+              <Link
+                to="/login"
+                className="bg-white text-black px-4 py-2 rounded-xl shadow hover:bg-gray-100 transition"
+              >
+                ورود
+              </Link>
+            </>
+          )}
+        </div>
       </div>
     </header>
   );
