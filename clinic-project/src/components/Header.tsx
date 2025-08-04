@@ -13,8 +13,6 @@ export const Header = () => {
     { title: "تخصص‌ها", path: "/specialties" },
     { title: "برنامه‌ها", path: "/schedules" },
   ];
-  const userId = localStorage.getItem("userId");
-  const fullName = localStorage.getItem("FullName");
 
   useEffect(() => {
     const userId = localStorage.getItem("userId");
