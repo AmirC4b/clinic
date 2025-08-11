@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function Patients() {
   const [searchTerm, setSearchTerm] = useState("");
   const [patients, setPatients] = useState([]);
+  const [editingPatient, setEditingPatient] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -68,6 +70,54 @@ export default function Patients() {
       fetchSearchPatients(searchTerm);
     }
   }, [searchTerm]);
+
+  const handleDelete = async (id) => {
+    try {
+      await axios.delete(`https://nowruzi.top/api/Clinic/patients/${id}`);
+      fetchAllPatients();
+    } catch (error) {
+      toast.info("عملیات حذف با خطا مواجهه شد");
+      console.log(error);
+    }
+  };
+
+  const handleEdit = (patient) => {
+    setEditingPatient(patient);
+    setFormData({
+      firstName: patient.firstName || "",
+      lastName: patient.lastName || "",
+      nationalCode: patient.nationalCode || "",
+      phoneNumber: patient.phoneNumber || "",
+      dateOfBirth: patient.dateOfBirth ? patient.dateOfBirth.split("T")[0] : "",
+      gender: patient.gender || 1,
+      address: patient.address || "",
+    });
+  };
+
+  const handleCloseModal = () => {
+    setEditingPatient(null);
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = async () => {
+    try {
+      await axios.put(
+        `https://nowruzi.top/api/Clinic/patients/${editingPatient.id}`,
+        formData
+      );
+      handleCloseModal();
+      fetchAllPatients();
+      toast.success("با موفقیت تغییر کرد");
+    } catch (error) {
+      console.error("خطا در ویرایش بیمار:", error);
+      alert("ویرایش بیمار با خطا مواجه شد");
+    }
+  };
+
   return (
     <div className="p-6 max-w-5xl mx-auto">
       {/* هدر */}
@@ -190,10 +240,16 @@ export default function Patients() {
                 <td className="px-4 py-3">{patient.phoneNumber}</td>
                 <td className="px-4 py-3">{patient.nationalCode}</td>
                 <td className="px-4 py-3 text-center space-x-2 rtl:space-x-reverse">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                  <button
+                    onClick={() => handleEdit(patient)}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                  >
                     ویرایش
                   </button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">
+                  <button
+                    onClick={() => handleDelete(patient.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                  >
                     حذف
                   </button>
                 </td>
@@ -210,6 +266,80 @@ export default function Patients() {
           </tbody>
         </table>
       </div>
+      {editingPatient && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md">
+            <h2 className="text-xl font-bold mb-4">ویرایش بیمار</h2>
+
+            <input
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
+              placeholder="نام"
+              className="border p-2 rounded mb-2 w-full"
+            />
+            <input
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
+              placeholder="نام خانوادگی"
+              className="border p-2 rounded mb-2 w-full"
+            />
+            <input
+              name="nationalCode"
+              value={formData.nationalCode}
+              onChange={handleChange}
+              placeholder="کد ملی"
+              className="border p-2 rounded mb-2 w-full"
+            />
+            <input
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={handleChange}
+              placeholder="شماره تماس"
+              className="border p-2 rounded mb-2 w-full"
+            />
+            <input
+              type="date"
+              name="dateOfBirth"
+              value={formData.dateOfBirth}
+              onChange={handleChange}
+              className="border p-2 rounded mb-2 w-full"
+            />
+            <select
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              className="border p-2 rounded mb-4 w-full"
+            >
+              <option value={1}>مرد</option>
+              <option value={2}>زن</option>
+            </select>
+            <input
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              placeholder="آدرس"
+              className="border p-2 rounded mb-4 w-full"
+            />
+
+            <div className="flex justify-end space-x-2 rtl:space-x-reverse">
+              <button
+                onClick={handleCloseModal}
+                className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                لغو
+              </button>
+              <button
+                onClick={handleSave}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                ذخیره
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
