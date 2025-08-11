@@ -8,10 +8,10 @@ const Layout = () => {
     <div dir="rtl" className="flex flex-col min-h-screen">
       <Header />
 
-      <div className="flex flex-1">
+      <div className="flex flex-1 pt-20">
         <Sidebar />
 
-        <main className="flex-1 bg-gray-50 p-6 overflow-y-auto">
+        <main className=" flex-1 bg-gray-50 p-6 overflow-y-auto">
           <Outlet />
         </main>
       </div>

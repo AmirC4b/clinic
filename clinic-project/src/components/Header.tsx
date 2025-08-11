@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 export const Header = () => {
   const navigate = useNavigate();
@@ -33,10 +34,11 @@ export const Header = () => {
     setLogged(false);
     setUserFullName("");
     navigate("/");
+    toast.success("با موفقیت خارج شدید");
   };
 
   return (
-    <header className="bg-blue-600 text-white py-4 px-6" dir="rtl">
+    <header className="bg-blue-600 text-white py-4 px-6 fixed top-0 w-full z-50" dir="rtl">
       <div className="container mx-auto flex items-center justify-between">
         <h1 className="text-xl font-bold whitespace-nowrap">
           سیستم مدیریت کلینیک
