@@ -41,9 +41,11 @@ export default function Patients() {
         gender: 1,
         address: "",
       });
-      fetchAllPatients(); // آپدیت لیست بعد از افزودن
-    } catch (err) {
-      console.error("خطا در افزودن بیمار:", err);
+      toast.success("بیمار با موفقیت  اضافه شد");
+      fetchAllPatients();
+    } catch (error) {
+      toast.error(error.response.data);
+      console.log("خطا در افزودن بیمار:", error);
     }
   };
   const fetchSearchPatients = async (term) => {
@@ -53,8 +55,6 @@ export default function Patients() {
         {
           params: {
             SearchTerm: term,
-            Page: 1,
-            PageSize: 20,
           },
         }
       );
@@ -76,7 +76,7 @@ export default function Patients() {
       await axios.delete(`https://nowruzi.top/api/Clinic/patients/${id}`);
       fetchAllPatients();
     } catch (error) {
-      toast.info("عملیات حذف با خطا مواجهه شد");
+      toast.error(error.response.data);
       console.log(error);
     }
   };
@@ -113,7 +113,7 @@ export default function Patients() {
       fetchAllPatients();
       toast.success("با موفقیت تغییر کرد");
     } catch (error) {
-      console.error("خطا در ویرایش بیمار:", error);
+      toast.error(error.response.data);
       alert("ویرایش بیمار با خطا مواجه شد");
     }
   };
@@ -125,11 +125,12 @@ export default function Patients() {
         <h1 className="text-2xl font-bold">لیست بیماران</h1>
         <button
           onClick={() => setShowForm(!showForm)}
-          className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg"
+          className="bg-green-500 cursor-pointer hover:bg-green-600 text-white px-4 py-2 rounded-lg"
         >
           + افزودن بیمار
         </button>
       </div>
+      {/* فرم اضافه کردن بیمار */}
       {showForm && (
         <div className="bg-gray-100 p-4 rounded-lg mb-4">
           <div className="grid grid-cols-2 gap-4">
@@ -239,7 +240,7 @@ export default function Patients() {
                 <td className="px-4 py-3">{patient.fullName}</td>
                 <td className="px-4 py-3">{patient.phoneNumber}</td>
                 <td className="px-4 py-3">{patient.nationalCode}</td>
-                <td className="px-4 py-3 text-center space-x-2 rtl:space-x-reverse">
+                <td className="px-4 py-3 flex justify-center gap-2 text-center space-x-2 rtl:space-x-reverse">
                   <button
                     onClick={() => handleEdit(patient)}
                     className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
