@@ -16,7 +16,7 @@ export default function Patients() {
     gender: 1,
     address: "",
   });
-
+  // برای گرفتن لیست بیماران
   const fetchAllPatients = async () => {
     try {
       const response = await axios.get(
@@ -27,7 +27,7 @@ export default function Patients() {
       console.log("خطا در گرفتن لیست بیماران : ", error);
     }
   };
-
+  // برای اضافه کردن بیمار
   const handleAddPatient = async () => {
     try {
       await axios.post("https://nowruzi.top/api/Clinic/patients", formData);
@@ -48,6 +48,7 @@ export default function Patients() {
       console.log("خطا در افزودن بیمار:", error);
     }
   };
+  // برای سرچ کردن
   const fetchSearchPatients = async (term) => {
     try {
       const response = await axios.get(
@@ -63,6 +64,7 @@ export default function Patients() {
       console.error("خطا در گرفتن بیماران با سرچ:", error);
     }
   };
+
   useEffect(() => {
     if (searchTerm.trim() === "") {
       fetchAllPatients();
@@ -70,17 +72,18 @@ export default function Patients() {
       fetchSearchPatients(searchTerm);
     }
   }, [searchTerm]);
-
-  const handleDelete = async (id) => {
+  // برای حذف کردن
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`https://nowruzi.top/api/Clinic/patients/${id}`);
       fetchAllPatients();
+      toast.success("بیمار با موفقیت حذف شد");
     } catch (error) {
       toast.error(error.response.data);
       console.log(error);
     }
   };
-
+  // برای ویرایش
   const handleEdit = (patient) => {
     setEditingPatient(patient);
     setFormData({
@@ -93,7 +96,7 @@ export default function Patients() {
       address: patient.address || "",
     });
   };
-
+  // برای بستن مودال
   const handleCloseModal = () => {
     setEditingPatient(null);
   };
@@ -102,7 +105,7 @@ export default function Patients() {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-
+  // برای سیو کردن
   const handleSave = async () => {
     try {
       await axios.put(

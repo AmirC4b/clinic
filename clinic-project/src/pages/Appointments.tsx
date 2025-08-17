@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isCancel } from "axios";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
@@ -18,13 +18,12 @@ export default function Appointments() {
     reason: "",
     notes: "",
   });
-  const [search, setSearchData] = useState({
-    PatientId: 0,
+  const [searchData, setSearchData] = useState({
     DoctorId: 0,
     FromDate: "",
-    ToData: "",
+    ToDate: "",
     IsCancelled: "",
-  })
+  });
 
   // گرفتن لیست دکتر ها
   const fetchDoctor = async () => {
@@ -80,6 +79,30 @@ export default function Appointments() {
     } catch (error) {
       toast.error(error.response.data);
       console.log("رزرو نوبت با خطا مواجهه شد", error);
+    }
+  };
+
+  // جستجو
+  const serachAppointment = async () => {
+    try {
+      const response = await axios.get(
+        "https://nowruzi.top/api/Clinic/appointments/search",
+        {
+          params: {
+            DoctorId: searchData.DoctorId || undefined,
+            FromDate: searchData.FromDate || undefined,
+            ToDate: searchData.ToDate || undefined,
+            IsCancelled:
+              searchData.IsCancelled !== ""
+                ? searchData.IsCancelled
+                : undefined,
+          },
+        }
+      );
+      console.log(response.data)
+      setAppointments(response.data);
+    } catch (error) {
+      console.log("خطا در جستجو", error);
     }
   };
 
@@ -151,7 +174,7 @@ export default function Appointments() {
             {/* انتخاب پزشک */}
             <select
               className="border p-2 rounded"
-              value={formData.doctorId}
+              value={formData.doctorScheduleId}
               onChange={(e) =>
                 setFormData({
                   ...formData,
@@ -213,8 +236,8 @@ export default function Appointments() {
         >
           <option value={0}>همه پزشکان</option>
           {doctor.map((dc) => (
-            <option key={dc.id} value={dc.id}>
-              {dc.fullName}
+            <option key={dc.doctor.id} value={dc.doctor.id}>
+              {dc.doctor.fullName}
             </option>
           ))}
         </select>
@@ -242,24 +265,24 @@ export default function Appointments() {
         {/* وضعیت نوبت‌دهی */}
         <select
           className="border p-2 rounded"
-          value={searchData.IsAvailable}
+          value={searchData.IsCancelled}
           onChange={(e) =>
             setSearchData({
               ...searchData,
-              IsAvailable:
-                e.target.value === "" ? "" : e.target.value === "true",
+              IsCancelled: e.target.value,
             })
           }
         >
           <option value="">همه وضعیت‌ها</option>
-          <option value="true">فعال</option>
-          <option value="false">غیرفعال</option>
+          <option value="false">فعال</option>
+          <option value="true">لغو شده</option>
         </select>
       </div>
 
       {/* دکمه جستجو */}
       <div className="flex justify-end mb-4">
         <button
+          onClick={serachAppointment}
           className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
         >
           جستجو
