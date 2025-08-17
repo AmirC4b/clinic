@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Specialties() {
@@ -106,7 +106,7 @@ export default function Specialties() {
             </tr>
           </thead>
           <tbody>
-            {specialties.map((special, index) => (
+            {specialties.map((special: any, index:any) => (
               <tr key={special.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3 text-center">{index + 1}</td>
                 <td className="px-4 py-3 text-center">{special.name}</td>

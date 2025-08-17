@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Patients() {
@@ -49,7 +49,7 @@ export default function Patients() {
     }
   };
   // برای سرچ کردن
-  const fetchSearchPatients = async (term) => {
+  const fetchSearchPatients = async (term: any) => {
     try {
       const response = await axios.get(
         "https://nowruzi.top/api/Clinic/patients/search",
@@ -84,7 +84,7 @@ export default function Patients() {
     }
   };
   // برای ویرایش
-  const handleEdit = (patient) => {
+  const handleEdit = (patient: any) => {
     setEditingPatient(patient);
     setFormData({
       firstName: patient.firstName || "",
@@ -101,7 +101,7 @@ export default function Patients() {
     setEditingPatient(null);
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
@@ -237,7 +237,7 @@ export default function Patients() {
             </tr>
           </thead>
           <tbody>
-            {patients.map((patient, index) => (
+            {patients.map((patient: any, index: number) => (
               <tr key={patient.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{patient.fullName}</td>

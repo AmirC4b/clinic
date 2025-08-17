@@ -45,7 +45,7 @@ export default function Doctors() {
     }
   };
   // برای سرچ
-  const fetchSearchDoctors = async (term) => {
+  const fetchSearchDoctors = async (term: any) => {
     try {
       const response = await axios.get(
         "https://nowruzi.top/api/Clinic/doctors/search",
@@ -87,7 +87,7 @@ export default function Doctors() {
   }, [searchTerm]);
 
   // برای حذف کردن
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`https://nowruzi.top/api/Clinic/doctors/${id}`);
       toast.success("دکتر با موفقیت حذف شد");
@@ -178,7 +178,7 @@ export default function Doctors() {
             className="border p-2 rounded"
           >
             <option value={0}>انتخاب تخصص</option>
-            {specialties.map((sp) => (
+            {specialties.map((sp: any) => (
               <option key={sp.id} value={sp.id}>
                 {sp.name}
               </option>
@@ -220,7 +220,7 @@ export default function Doctors() {
             </tr>
           </thead>
           <tbody>
-            {doctors.map((doctor, index) => (
+            {doctors.map((doctor: any, index: number) => (
               <tr key={doctor.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{doctor.fullName}</td>

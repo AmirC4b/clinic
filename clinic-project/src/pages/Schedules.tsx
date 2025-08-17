@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 import { toast } from "react-toastify";
 
@@ -43,7 +43,7 @@ export default function Schedules() {
     }
   };
   // اضافه کردن برنامه
-  const addSchedules = async (id) => {
+  const addSchedules = async (id: number) => {
     try {
       await axios.post("https://nowruzi.top/api/Clinic/schedules", formData);
       setShowForm(false);
@@ -88,7 +88,7 @@ export default function Schedules() {
     fetchSchedules();
   }, []);
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`https://nowruzi.top/api/Clinic/schedules/${id}`);
       toast.success("با موفقیت حذف شد");
@@ -124,7 +124,7 @@ export default function Schedules() {
               }
             >
               <option value={0}>انتخاب پزشک</option>
-              {doctor.map((dc) => (
+              {doctor.map((dc: any) => (
                 <option key={dc.id} value={dc.id}>
                   {dc.fullName}
                 </option>
@@ -183,7 +183,7 @@ export default function Schedules() {
           }
         >
           <option value={0}>همه پزشکان</option>
-          {doctor.map((dc) => (
+          {doctor.map((dc: any) => (
             <option key={dc.id} value={dc.id}>
               {dc.fullName}
             </option>
@@ -254,7 +254,7 @@ export default function Schedules() {
             </tr>
           </thead>
           <tbody>
-            {schedules.map((schedule, index) => (
+            {schedules.map((schedule:any, index:any) => (
               <tr key={schedule.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{schedule.doctor.fullName}</td>

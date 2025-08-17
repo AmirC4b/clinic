@@ -1,5 +1,5 @@
-import axios, { isCancel } from "axios";
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function Appointments() {
@@ -99,7 +99,7 @@ export default function Appointments() {
           },
         }
       );
-      console.log(response.data)
+      console.log(response.data);
       setAppointments(response.data);
     } catch (error) {
       console.log("خطا در جستجو", error);
@@ -113,7 +113,7 @@ export default function Appointments() {
   }, []);
 
   // برای حذف کردن
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`https://nowruzi.top/api/Clinic/appointments/${id}`);
       toast.success("نوبت با موفقیت حذف شد");
@@ -165,7 +165,7 @@ export default function Appointments() {
               }
             >
               <option value={0}>انتخاب بیمار</option>
-              {patient.map((pt) => (
+              {patient.map((pt: any) => (
                 <option key={pt.id} value={pt.id}>
                   {pt.fullName}
                 </option>
@@ -183,7 +183,7 @@ export default function Appointments() {
               }
             >
               <option value={0}>انتخاب پزشک</option>
-              {doctor.map((dc) => (
+              {doctor.map((dc: any) => (
                 <option key={dc.id} value={dc.id}>
                   {dc.doctor.fullName}    {dc.dayDisplay}   {" "}
                   {dc.isAvailable ? "✅" : "❌"}
@@ -235,7 +235,7 @@ export default function Appointments() {
           }
         >
           <option value={0}>همه پزشکان</option>
-          {doctor.map((dc) => (
+          {doctor.map((dc: any) => (
             <option key={dc.doctor.id} value={dc.doctor.id}>
               {dc.doctor.fullName}
             </option>
@@ -304,7 +304,7 @@ export default function Appointments() {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appo, index) => (
+            {appointments.map((appo: any, index: number) => (
               <tr key={appo.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{appo.patient.fullName}</td>
