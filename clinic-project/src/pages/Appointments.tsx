@@ -1,17 +1,26 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import type { IAppointement } from "../types/IAppointment";
+import type { IDoctor } from "../types/IDoctor";
+import type { Ipatient } from "../types/Ipatient";
 
 export default function Appointments() {
-  const [appointments, setAppointments] = useState([]);
+  interface DoctorScheduleWithDoctor {
+    id: number;
+    doctor: IDoctor;
+    dayDisplay: string;
+    isAvailable: boolean;
+  }
+  const [appointments, setAppointments] = useState<IAppointement[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedId, setSelectedId] = useState(null);
   const [cancelModal, setCancelModal] = useState(false);
   const [cancelReason, setCancelReason] = useState({
     cancellationReason: "",
   });
-  const [doctor, setDoctor] = useState([]);
-  const [patient, setPatient] = useState([]);
+  const [doctor, setDoctor] = useState<DoctorScheduleWithDoctor[]>([]);
+  const [patient, setPatient] = useState<Ipatient[]>([]);
   const [formData, setFormData] = useState({
     patientId: 0,
     doctorScheduleId: 0,
@@ -76,7 +85,7 @@ export default function Appointments() {
       });
       toast.success("رزرو نوبت با موفقیت انجام شد");
       fetchAppointment();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("رزرو نوبت با خطا مواجهه شد", error);
     }
@@ -118,7 +127,7 @@ export default function Appointments() {
       await axios.delete(`https://nowruzi.top/api/Clinic/appointments/${id}`);
       toast.success("نوبت با موفقیت حذف شد");
       fetchAppointment();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("عملیات حذف با خطا مواجهه شد", error);
     }
@@ -133,7 +142,7 @@ export default function Appointments() {
       setCancelModal(false);
       toast.success("نوبت با موفقیت لغو شد");
       fetchAppointment();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("خطا در لغو نوبت ", error);
     }
@@ -165,7 +174,7 @@ export default function Appointments() {
               }
             >
               <option value={0}>انتخاب بیمار</option>
-              {patient.map((pt: any) => (
+              {patient.map((pt: Ipatient) => (
                 <option key={pt.id} value={pt.id}>
                   {pt.fullName}
                 </option>
@@ -183,7 +192,7 @@ export default function Appointments() {
               }
             >
               <option value={0}>انتخاب پزشک</option>
-              {doctor.map((dc: any) => (
+              {doctor.map((dc: DoctorScheduleWithDoctor) => (
                 <option key={dc.id} value={dc.id}>
                   {dc.doctor.fullName}    {dc.dayDisplay}   {" "}
                   {dc.isAvailable ? "✅" : "❌"}
@@ -235,7 +244,7 @@ export default function Appointments() {
           }
         >
           <option value={0}>همه پزشکان</option>
-          {doctor.map((dc: any) => (
+          {doctor.map((dc: DoctorScheduleWithDoctor) => (
             <option key={dc.doctor.id} value={dc.doctor.id}>
               {dc.doctor.fullName}
             </option>
@@ -304,7 +313,7 @@ export default function Appointments() {
             </tr>
           </thead>
           <tbody>
-            {appointments.map((appo: any, index: number) => (
+            {appointments.map((appo: IAppointement, index: number) => (
               <tr key={appo.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{appo.patient.fullName}</td>
@@ -354,7 +363,7 @@ export default function Appointments() {
               <h2 className="text-lg font-bold mb-4 text-gray-800">لغو نوبت</h2>
               <textarea
                 className="w-full border border-gray-300 rounded p-2 mb-4 focus:outline-none focus:ring-2 focus:ring-red-400 resize-none"
-                rows="4"
+                rows={4}
                 placeholder="دلیل لغو را وارد کنید..."
                 value={cancelReason.cancellationReason}
                 onChange={(e) =>

@@ -1,19 +1,29 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
+import type { IDoctor } from "../types/IDoctor";
+import type { ISpeciality } from "../types/ISpeciality";
 
 export default function Doctors() {
+  interface DoctorFormInput {
+    specialtyId: number;
+    firstName: string;
+    lastName: string;
+    medicalLicenseNumber: string;
+    phoneNumber: string;
+    gender: number;
+  }
   const [searchTerm, setSearchTerm] = useState("");
-  const [specialties, setspecialties] = useState([]);
-  const [doctors, setDoctors] = useState([]);
+  const [specialties, setspecialties] = useState<ISpeciality[]>([]);
+  const [doctors, setDoctors] = useState<IDoctor[]>([]);
   const [showForm, setShowForm] = useState(false);
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm({
+  } = useForm<DoctorFormInput>({
     defaultValues: {
       specialtyId: 0,
       firstName: "",
@@ -23,7 +33,7 @@ export default function Doctors() {
       gender: 1,
     },
   });
-
+  // برای گرفتن لیست تخصص ها
   const fetchspecialty = async () => {
     try {
       const res = await axios.get("https://nowruzi.top/api/Clinic/specialties");
@@ -45,7 +55,7 @@ export default function Doctors() {
     }
   };
   // برای سرچ
-  const fetchSearchDoctors = async (term: any) => {
+  const fetchSearchDoctors = async (term: string) => {
     try {
       const response = await axios.get(
         "https://nowruzi.top/api/Clinic/doctors/search",
@@ -62,14 +72,14 @@ export default function Doctors() {
   };
 
   // برای اضافه کردن دکتر
-  const onSubmit = async (data) => {
+  const onSubmit = async (data: DoctorFormInput) => {
     console.log(data);
     try {
       await axios.post("https://nowruzi.top/api/Clinic/doctors", data);
       toast.success("دکتر با موفقیت اضافه شد");
       reset();
       fetchDoctors();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("خطا در افزودن دکتر:", error);
     }
@@ -92,7 +102,7 @@ export default function Doctors() {
       await axios.delete(`https://nowruzi.top/api/Clinic/doctors/${id}`);
       toast.success("دکتر با موفقیت حذف شد");
       fetchDoctors();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log(error);
     }
@@ -178,7 +188,7 @@ export default function Doctors() {
             className="border p-2 rounded"
           >
             <option value={0}>انتخاب تخصص</option>
-            {specialties.map((sp: any) => (
+            {specialties.map((sp: ISpeciality) => (
               <option key={sp.id} value={sp.id}>
                 {sp.name}
               </option>
@@ -220,7 +230,7 @@ export default function Doctors() {
             </tr>
           </thead>
           <tbody>
-            {doctors.map((doctor: any, index: number) => (
+            {doctors.map((doctor: IDoctor, index: number) => (
               <tr key={doctor.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{doctor.fullName}</td>
@@ -242,7 +252,7 @@ export default function Doctors() {
             ))}
             {doctors.length === 0 && (
               <tr>
-                <td colSpan="5" className="text-center py-6 text-gray-500">
+                <td colSpan={5} className="text-center py-6 text-gray-500">
                   بیماری یافت نشد
                 </td>
               </tr>

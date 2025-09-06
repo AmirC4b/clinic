@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import type { Ipatient } from "../types/Ipatient";
 
 export default function Patients() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [patients, setPatients] = useState([]);
+  const [patients, setPatients] = useState<Ipatient[]>([]);
   const [editingPatient, setEditingPatient] = useState(null);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
@@ -43,7 +44,7 @@ export default function Patients() {
       });
       toast.success("بیمار با موفقیت  اضافه شد");
       fetchAllPatients();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("خطا در افزودن بیمار:", error);
     }
@@ -78,7 +79,7 @@ export default function Patients() {
       await axios.delete(`https://nowruzi.top/api/Clinic/patients/${id}`);
       fetchAllPatients();
       toast.success("بیمار با موفقیت حذف شد");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log(error);
     }
@@ -115,7 +116,7 @@ export default function Patients() {
       handleCloseModal();
       fetchAllPatients();
       toast.success("با موفقیت تغییر کرد");
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       alert("ویرایش بیمار با خطا مواجه شد");
     }
@@ -237,7 +238,7 @@ export default function Patients() {
             </tr>
           </thead>
           <tbody>
-            {patients.map((patient: any, index: number) => (
+            {patients.map((patient: Ipatient, index: number) => (
               <tr key={patient.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{patient.fullName}</td>
@@ -262,7 +263,7 @@ export default function Patients() {
 
             {patients.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center py-6 text-gray-500">
+                <td colSpan={4} className="text-center py-6 text-gray-500">
                   بیماری یافت نشد
                 </td>
               </tr>

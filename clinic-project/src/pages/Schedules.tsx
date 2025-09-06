@@ -2,11 +2,13 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { Check, X } from "lucide-react";
 import { toast } from "react-toastify";
+import type { IShedule } from "../types/IShedules";
+import type { IDoctor } from "../types/IDoctor";
 
 export default function Schedules() {
-  const [schedules, setSchedules] = useState([]);
+  const [schedules, setSchedules] = useState<IShedule[]>([]);
   const [showForm, setShowForm] = useState(false);
-  const [doctor, setdoctor] = useState([]);
+  const [doctor, setdoctor] = useState<IDoctor[]>([]);
   const [formData, setFormData] = useState({
     doctorId: 0,
     day: "",
@@ -55,7 +57,7 @@ export default function Schedules() {
       });
       toast.success("جدول زمانی با موفقیت اضافه شد");
       fetchSchedules();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("خطا در افزودن برنامه زمانی", error);
     }
@@ -93,7 +95,7 @@ export default function Schedules() {
       await axios.delete(`https://nowruzi.top/api/Clinic/schedules/${id}`);
       toast.success("با موفقیت حذف شد");
       fetchSchedules();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("حذف کردن با مشکل برخورد", error);
     }
@@ -124,7 +126,7 @@ export default function Schedules() {
               }
             >
               <option value={0}>انتخاب پزشک</option>
-              {doctor.map((dc: any) => (
+              {doctor.map((dc: IDoctor) => (
                 <option key={dc.id} value={dc.id}>
                   {dc.fullName}
                 </option>
@@ -183,7 +185,7 @@ export default function Schedules() {
           }
         >
           <option value={0}>همه پزشکان</option>
-          {doctor.map((dc: any) => (
+          {doctor.map((dc: IDoctor) => (
             <option key={dc.id} value={dc.id}>
               {dc.fullName}
             </option>
@@ -254,7 +256,7 @@ export default function Schedules() {
             </tr>
           </thead>
           <tbody>
-            {schedules.map((schedule:any, index:any) => (
+            {schedules.map((schedule: IShedule, index: any) => (
               <tr key={schedule.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3">{index + 1}</td>
                 <td className="px-4 py-3">{schedule.doctor.fullName}</td>
@@ -285,7 +287,7 @@ export default function Schedules() {
 
             {schedules.length === 0 && (
               <tr>
-                <td colSpan="9" className="text-center py-6 text-gray-500">
+                <td colSpan={9} className="text-center py-6 text-gray-500">
                   بیماری یافت نشد
                 </td>
               </tr>

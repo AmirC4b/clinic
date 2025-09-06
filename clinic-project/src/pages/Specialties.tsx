@@ -1,9 +1,10 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import type { ISpeciality } from "../types/ISpeciality";
 
 export default function Specialties() {
-  const [specialties, setspecialties] = useState([]);
+  const [specialties, setspecialties] = useState<ISpeciality[]>([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -29,7 +30,7 @@ export default function Specialties() {
       });
       toast.success("تخصص با موفقیت اضافه شد");
       handleSpecialities();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log("خطا در افزودن بیمار", error);
     }
@@ -40,12 +41,12 @@ export default function Specialties() {
   }, []);
 
   // برای حذف کردن
-  const handleDelete = async (id) => {
+  const handleDelete = async (id: number) => {
     try {
       await axios.delete(`https://nowruzi.top/api/Clinic/specialties/${id}`);
       toast.success("تخصص با موفقیت حذف شد");
       handleSpecialities();
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.response.data);
       console.log(error);
     }
@@ -106,7 +107,7 @@ export default function Specialties() {
             </tr>
           </thead>
           <tbody>
-            {specialties.map((special: any, index:any) => (
+            {specialties.map((special: ISpeciality, index: any) => (
               <tr key={special.id} className="border-b hover:bg-gray-50">
                 <td className="px-4 py-3 text-center">{index + 1}</td>
                 <td className="px-4 py-3 text-center">{special.name}</td>
@@ -128,7 +129,7 @@ export default function Specialties() {
             ))}
             {specialties.length === 0 && (
               <tr>
-                <td colSpan="4" className="text-center py-6 text-gray-500">
+                <td colSpan={4} className="text-center py-6 text-gray-500">
                   بیماری یافت نشد
                 </td>
               </tr>
